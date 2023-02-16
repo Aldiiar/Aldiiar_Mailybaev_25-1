@@ -1,10 +1,9 @@
 from django.contrib import admin
 from django.urls import path
-from posts.views import hello_view, nowdate_view, goodby_view
+from products.views import main_page_view, products_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hello/', hello_view),
-    path('now_date/', nowdate_view),
-    path('goodby/', goodby_view)
+    path('', main_page_view),
+    path('products/', products_view)
 ]
