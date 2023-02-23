@@ -14,7 +14,7 @@ def products_view(request):
         context = {
             'products': [
                 {
-                    'id': tovar,
+                    'id': tovar.id,
                     'title': tovar.title,
                     'image': tovar.image,
                     'rating': tovar.rating,
@@ -35,5 +35,16 @@ def hashtag_view(request):
         }
 
         return render(request, 'products/hashtags.html', context=context)
+
+def product_detail_view(request, id):
+    if request.method == 'GET':
+        product = Product.objects.get(id=id)
+
+        context = {
+            'product': product,
+            'comments': product.comment_set.all()
+        }
+
+        return render(request, 'products/detail.html', context=context)
 
 

@@ -1,21 +1,11 @@
 {% extends 'layouts/index.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'products.css' %}">
+{% endblock %}
 
 {% block content %}
-    <style type="text/css">
-        .products {
-            display: flex;
-            justify-content: space-between;
-            width: 80%;
-            margin-left: 10%;
-            flex-wrap: wrap;
-        }
-        .product_block {
-            margin: 20px;
-        }
-        .product_image {
-            width: 100%;
-        }
-    </style>
     <div class="products">
         {% for product in products %}
             <div class="product_block">
@@ -28,7 +18,7 @@
                         {% for hashtag in product.hashtags %}
                             <p>{{ hashtag.title }}</p>
                         {% endfor %}
-                        <a href="#" class="card-link">More</a>
+                        <a href="/products/{{ product.id }}/" class="card-link">More</a>
                     </div>
                 </div>
             </div>
