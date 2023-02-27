@@ -11,7 +11,11 @@
             <div class="product_block">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
+                    {% if product.image %}
                         <img class="product_image" src="/media/{{ product.image }}" alt="">
+                    {% else %}
+                        <img class="product_image" src="{% static '129346.png'%}" alt="">
+                    {% endif %}
                         <h5 class="card-title">{{ product.title }}</h5>
                         <h3 class="card-title">Price: {{ product.price }}$</h3>
                         <h6 class="card-title">Rate: {{ product.rating }}</h6>

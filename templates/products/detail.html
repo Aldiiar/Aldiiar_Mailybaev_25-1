@@ -1,13 +1,16 @@
 {% extends 'layouts/index.html' %}
+{% load static %}
 
 {% block content %}
     <style type="text/css">
         .product {
             width: 80%;
             margin-left: 10%;
+
         }
         .product > img {
             width: 30%;
+            margin-left: 33%;
         }
         .dates {
             display: flex;
@@ -30,7 +33,11 @@
         }
     </style>
     <div class="product">
-        <img src="/media/{{ product.image }}" alt="">
+        {% if product.image %}
+            <img class="product_image" src="/media/{{ product.image }}" alt="">
+        {% else %}
+            <img class="product_image" src="{% static '129346.png' %}" alt="">
+        {% endif %}
         <h1>{{ product.title }}</h1>
         <h5>{{ product.description }}</h5>
         <div class="dates">
@@ -38,6 +45,11 @@
             <h6>{{ product.modified_date }}</h6>
         </div>
         <p class="comments_title">Comments</p>
+        <form action="/products/{{ product.id }}/" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Add Comment">
+        </form>
         <div class="comments">
             {% for comment in comments %}
                 <div class="comment_block">
