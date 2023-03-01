@@ -22,7 +22,8 @@ def products_view(request):
                     'price': tovar.price,
                     'hashtags': tovar.hashtags.all()
                 } for tovar in tovary
-            ]
+            ],
+            'user': request.user
         }
 
         return render(request, 'products/products.html', context=context)
