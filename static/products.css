@@ -5,9 +5,37 @@
     margin-left: 10%;
     flex-wrap: wrap;
 }
+
 .product_block {
+    transition: all 0.3s;
     margin: 20px;
 }
+
+.product_block:hover{
+    transform: scale(1.05);
+}
+
 .product_image {
     width: 100%;
+}
+
+.pages {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.page_button {
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    border: 1px solid black;
+    background: black;
+    color: white;
+    transition: all 0.3s;
+    margin: 5px;
+}
+
+.page_button:hover {
+    transform: scale(1.1);
 }

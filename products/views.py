@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from products.models import Product, Hashtag, Comment
 from products.forms import ProductCreateForm, CommentsCreateForm
+from products.constans import PAGINATION_LIMIT
 
 # Create your views here.
 
@@ -11,6 +12,20 @@ def main_page_view(request):
 def products_view(request):
     if request.method == 'GET':
         tovary = Product.objects.all()
+        search = request.GET.get('search')
+        page = int(request.GET.get('page', 1))
+
+        max_page = tovary.__len__() / PAGINATION_LIMIT
+        if round(max_page) < max_page:
+            max_page = round(max_page) + 1
+        else:
+            max_page = round(max_page)
+
+        if search:
+            tovary = tovary.filter(title__contains=search) | tovary.filter(description__contains=search)
+
+        tovary = tovary[PAGINATION_LIMIT * (page-1):PAGINATION_LIMIT*page]
+
 
         context = {
             'products': [
@@ -23,7 +38,8 @@ def products_view(request):
                     'hashtags': tovar.hashtags.all()
                 } for tovar in tovary
             ],
-            'user': request.user
+            'user': request.user,
+            'pages': range(1, max_page+1)
         }
 
         return render(request, 'products/products.html', context=context)
