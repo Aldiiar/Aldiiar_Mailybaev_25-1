@@ -2,19 +2,22 @@ from django.shortcuts import render, redirect
 from users.forms import RegisterForm, LoginForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.views.generic import ListView, CreateView
 # Create your views here.
 
-def register_view(request):
-    if request.method == 'GET':
+class RegisterView(ListView, CreateView):
+    template_name = 'users/register.html'
+    form_class = RegisterForm
+
+    def get(self, request, **kwargs):
         context = {
-            'form': RegisterForm
+            'form': self.form_class
         }
+        return render(request, self.template_name, context=context)
 
-        return render(request, 'users/register.html', context=context)
-
-    if request.method == 'POST':
+    def post(self, request, **kwargs):
         data = request.POST
-        form = RegisterForm(data=data)
+        form = self.form_class(data=data)
 
         if form.is_valid():
             if form.cleaned_data.get('password1') == form.cleaned_data.get('password2'):
@@ -25,38 +28,45 @@ def register_view(request):
                 return redirect('/users/login/')
             else:
                 form.add_error('password1', 'Пароли не совпадают!')
-        return render(request, 'users/register.html', context={
+        return render(request, self.template_name, context={
             'form': form
         })
 
-def login_view(request):
-    if request.method == 'GET':
-        context = {
-            'form': LoginForm
-        }
 
-        return render(request, 'users/login.html', context=context)
 
-    if request.method == 'POST':
-        data = request.POST
-        form = LoginForm(data=data)
+class LoginView(ListView, CreateView):
+     template_name = 'users/login.html'
+     form_class = LoginForm
 
-        if form.is_valid():
-            user = authenticate(
-                username=form.cleaned_data.get('username'),
-                password=form.cleaned_data.get('password')
-            )
+     def get(self, request, **kwargs):
+         context = {
+             'form': self.form_class
+         }
+         return render(request, self.template_name, context=context)
 
-            if user:
-                login(request, user)
-                return redirect('/products')
-            else:
-                form.add_error('username', 'Пользователь не найден!')
+     def post(self, request, **kwargs):
+         data = request.POST
+         form = self.form_class(data=data)
 
-        return render(request, 'users/login.html', context={
-            'form': form
-        })
+         if form.is_valid():
+             user = authenticate(
+                 username=form.cleaned_data.get('username'),
+                 password=form.cleaned_data.get('password')
+             )
 
-def logout_view(request):
-    logout(request)
-    return redirect('/products/')
+             if user:
+                 login(request, user)
+                 return redirect('/products')
+             else:
+                 form.add_error('username', 'Пользователь не найден!')
+
+         return render(request, self.template_name, context={
+             'form': form
+         })
+
+
+
+class LogoutView(ListView):
+    def get(self, request, **kwargs):
+        logout(request)
+        return redirect('/products/')
